@@ -1,0 +1,155 @@
+<?php
+session_start();
+include 'db.php';
+
+$message = "";
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    $username = mysqli_real_escape_string($conn, $_POST['username']);
+    $password = $_POST['password']; // do not escape password, we use password_verify
+
+    // Fetch user by username
+    $query = "SELECT * FROM users WHERE username='$username' LIMIT 1";
+    $result = mysqli_query($conn, $query);
+
+    if (mysqli_num_rows($result) == 1) {
+
+        $row = mysqli_fetch_assoc($result);
+
+        // Verify hashed password
+        if (password_verify($password, $row['password'])) {
+
+            $_SESSION['username'] = $row['username'];
+            $_SESSION['role'] = $row['role'];
+
+            // ROLE REDIRECT
+            if ($row['role'] == 'admin') {
+                header("Location: admin_dashboard.php");
+                exit();
+            } else {
+                header("Location: dashboard.php");
+                exit();
+            }
+
+        } else {
+            $message = "Invalid username or password.";
+        }
+
+    } else {
+        $message = "Invalid username or password.";
+    }
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #020d1f;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-box {
+            width: 380px;
+            padding: 25px;
+            background: rgba(0, 20, 50, 0.85);
+            border-radius: 15px;
+            box-shadow: 0 0 20px #0af;
+            backdrop-filter: blur(4px);
+            text-align: center;
+        }
+
+        .login-box h2 {
+            color: #58c2ff;
+            margin-bottom: 20px;
+            font-size: 26px;
+            text-shadow: 0 0 10px #00aaff;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+            padding: 5px;
+            margin-right:20px;
+            text-align: left;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 8px;
+            border: none;
+            outline: none;
+            background: #062544;
+            color: white;
+            font-size: 14px;
+            box-shadow: inset 0 0 6px #00aaff;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 10px;
+            background: #007bff;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 0 12px #00aaff;
+            transition: 0.25s;
+        }
+
+        .btn-login:hover {
+            background: #005fcc;
+            transform: scale(1.03);
+        }
+
+        .error {
+            color: #ff4d4d;
+            margin-top: 10px;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="login-box">
+
+    <img src="spylogo.png" alt="Spy Logo" style="width:200px;">
+    
+    <form method="POST">
+        <div class="input-group">
+            <input type="text" name="username" placeholder="Username" autocomplete="off" required>
+        </div>
+
+        <div class="input-group">
+            <input type="password" name="password" placeholder="Password" autocomplete="off" required>
+        </div>
+        <br>
+
+        <button type="submit" class="btn-login">Login</button>
+
+        <p style="margin-top:15px; font-size:14px; color:#9bd8ff;">
+            No Account Yet? <a href="createacc.php" style="color:#00aaff;">Create Account</a>
+        </p>
+
+        <?php if ($message != ""): ?>
+            <p class="error"><?php echo $message; ?></p>
+        <?php endif; ?>
+    </form>
+</div>
+
+</body>
+</html>
