@@ -3,7 +3,7 @@ session_start();
 include 'db.php';
 
 if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'admin') {
-    header("Location: index.php");
+    header("Location: index.html");
     exit();
 }
 
@@ -179,3 +179,4 @@ if (isset($_GET['delete'])) {
 
 </body>
 </html>
+
