@@ -3,7 +3,7 @@ session_start(); // Start the session
 
 // Restrict access to admin users only
 if (!isset($_SESSION['username']) || $_SESSION['role'] == 'admin') {
-    header("Location: index.php");
+    header("Location: index.html");
     exit();
 }
 ?>
@@ -548,3 +548,4 @@ startGameLoop();
 </script>
 </body>
 </html>
+
