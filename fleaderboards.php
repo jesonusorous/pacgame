@@ -3,7 +3,7 @@ session_start();
 include 'db.php';
 
 if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'admin') {
-    header("Location: index.php");
+    header("Location: index.html");
     exit();
 }
 
@@ -120,3 +120,4 @@ $result = mysqli_query($conn, $query);
 
 </body>
 </html>
+
