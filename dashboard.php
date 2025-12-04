@@ -2,7 +2,7 @@
 session_start();
 
 if (!isset($_SESSION['username']) || $_SESSION['role'] == 'admin') {
-    header("Location: index.php");
+    header("Location: index.html");
     exit();
 }
 ?>
@@ -74,3 +74,4 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] == 'admin') {
 
 </body>
 </html>
+
